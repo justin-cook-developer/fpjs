@@ -8,7 +8,7 @@ const initModel = 0;
 
 function view(model, dispatch) {
   return div([
-    div({className: 'mv2' }, `Count: ${model}`),
+    div({ className: 'mv2' }, `Count: ${model}`),
     button({ className: 'pv1 ph2 mr2',
       onclick: () => dispatch(MESSAGES.ADD)
     }, '+'),
@@ -53,5 +53,4 @@ function app(initModel = 0, update, view, node) {
 const rootNode = document.getElementById('app');
 
 app(initModel, update, view, rootNode);
-
 
