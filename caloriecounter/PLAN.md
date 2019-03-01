@@ -2,14 +2,14 @@
 
 ## Data Model
 
-Example Model/Shape: 
+Example Model/Shape:
 
 ```javascript
 meal = {
   id: 1,
-  description: 'Breakfast', 
-  calories: 460
-}
+  description: 'Breakfast',
+  calories: 460,
+};
 model = {
   meals: [],
   showForm: false,
@@ -17,18 +17,27 @@ model = {
   calories: 600,
   editId: 3,
   nextId: 1,
-}
+};
 ```
 
 ## View Functions
 
 view
-  formView
-    fieldSet
-    buttonSet
-  tableView
-    tableHeader
-    mealsBody
-      mealRow
-        cell
-      totalRow 
+formView
+fieldSet
+buttonSet
+tableView
+tableHeader
+mealsBody
+mealRow
+cell
+totalRow
+
+## Update / Interactions
+
+Click add meal
+meal input
+calorie input
+click save (add / edit)
+click edit icon
+click delete icon
