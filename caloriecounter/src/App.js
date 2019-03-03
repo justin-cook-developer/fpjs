@@ -1,4 +1,4 @@
-import { h, diff, patch } from 'virtual-dom'
+import { h, diff, patch } from 'virtual-dom' 
 import createElement from 'virtual-dom/create-element'
 
 // impure code

@@ -103,7 +103,6 @@ function update(message, model) {
 function add(message, model) {
   const { nextId, description, calories } = model;
   const meal = { id: nextId, description, calories };
-  console.log(meal)
   const meals = [...model.meals, meal];
   return {
     ...model,
@@ -131,6 +130,7 @@ function edit(message, model) {
     description: '',
     calories: 0,
     editId: null,
+    showForm: false,
   };
 }
 
