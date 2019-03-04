@@ -27,10 +27,9 @@ function inputItem(dispatch, title, value, handleInput) {
 }
 
 function displayItem(title, value) {
-  const stringValue = value.toString();
   return div({ className: 'flex' }, [
     p(title),
-    p(stringValue),
+    p(value),
   ]);
 }
 
@@ -41,20 +40,50 @@ function inputGroup(dispatch, model) {
   ]);
 }
 
-function displayGroup(model) {
+function displayGroup(tip, total) {
   return div([
-    displayItem('Tip:', model.tipAmount),
-    displayItem('Total Amount:', model.total),
+    displayItem('Tip:', tip),
+    displayItem('Total Amount:', total),
   ]);
 }
 
 function view(dispatch, model) {
+  const { bill, tipPercentage } = model;
+  const [billFloat, tipPercFloat] = getFloats([bill, tipPercentage]);
+  const tipFloat = calculateTip(tipPercFloat, billFloat);
+  const [tip, total] = toMoneyFormat([tipFloat, tipFloat + billFloat]);
+
   return div({ className: 'mw6 center' }, [
     h1({ className: 'f2 pv2 bb' }, 'Tip Calculator'),
     // pre(JSON.stringify(model, null, 2)),
     inputGroup(dispatch, model),
-    displayGroup(model),
+    displayGroup(tip, total),
   ]);
+}
+
+
+function toFloat(val) {
+  return R.pipe(
+    parseFloat,
+    R.defaultTo(0),
+  )(val);
+}
+
+function getFloats(vals) {
+  return R.map(toFloat, vals);
+}
+
+function calculateTip(perc, bill) {
+  return bill * (perc / 100.00);
+}
+
+function moneyFormat(val) {
+  const string = val.toFixed(2);
+  return `$${string}`;
+}
+
+function toMoneyFormat(vals) {
+  return R.map(moneyFormat, vals);
 }
 
 export default view;

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Temperature Unit Of Measure Convert",
   "scripts": {
-    "start": "webpack-dev-server --open",
+    "start": "webpack-dev-server --open"
   },
   "author": "James Moore",
   "license": "MIT",
