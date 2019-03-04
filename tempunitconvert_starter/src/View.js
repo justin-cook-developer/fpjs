@@ -13,36 +13,6 @@ const {
   input
 } = hh(h);
 
-// my attempt
-// function inputField(dispatch, model, side) {
-//   const degrees = model[`${side}FieldValue`];
-//   return input({
-//     value: degrees,
-//     oninput: () => console.log(`input on ${side}`)
-//   });
-// }
-
-// function selectorField(dispatch, model, side) {
-//   const units = model[`${side}Units`];
-//   return select({
-//     value: units,
-//     oninput: () => console.log(`input on ${side}`)
-//   },
-//   [
-//     option('Celsius'),
-//     option('Fahrenheit'),
-//     option('Kelvin'),
-//   ]
-//   )
-// }
-
-// function tempEncapsulation(dispatch, model, side) {
-//   return div([
-//     inputField(dispatch, model, side),
-//     selectorField(dispatch, model, side),
-//   ])
-// }
-
 const UNITS = ['Kelvin', 'Celsius', 'Fahrenheit'];
 
 function unitOptions(selectedUnit) {
@@ -79,7 +49,7 @@ function body(dispatch, model) {
 function view(dispatch, model) {
   return div({ className: 'mw6 center' }, [
     h1({ className: 'f2 pv2 bb' }, 'Temperature Unit Converter'),
-    pre(JSON.stringify(model, null, 2)),
+    // pre(JSON.stringify(model, null, 2)),
     body(dispatch, model),
   ]);
 }

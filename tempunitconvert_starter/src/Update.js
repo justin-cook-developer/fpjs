@@ -55,8 +55,44 @@ function toInt(val) {
   )(val);
 }
 
+function FtoC(degrees) {
+  return (degrees - 32)  * (5 / 9);
+}
+
+function CtoF(degrees) {
+  return (degrees / (5 / 9)) + 32;
+}
+
+function CtoK(degrees) {
+  return degrees + 273.15;
+}
+
+function KtoC(degrees) {
+  return degrees - 273.15;
+}
+
+const FtoK = R.pipe(FtoC, CtoK);
+
+const KtoF = R.pipe(KtoC, CtoF);
+
+const conversions = {
+  Fahrenheit: {
+    Celsius: FtoC,
+    Kelvin: FtoK,
+  },
+  Celsius: {
+    Fahrenheit: CtoF,
+    Kelvin: CtoK,
+  },
+  Kelvin: {
+    Fahrenheit: KtoF,
+    Celsius: KtoC,
+  },
+};
+
 function convertFromToTemp(valFrom, unitFrom, unitTo) {
-  // finish from video
+  const convertFunction = conversions[unitFrom][unitTo] || (val => val);
+  return Math.round(convertFunction(valFrom));
 }
 
 function convert(model) {
