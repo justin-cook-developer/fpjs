@@ -13,6 +13,7 @@ const {
 } = hh(h)
 
 
+// View Functions
 function inputItem(dispatch, title, value, handleInput) {
   return div([
     p(title),
@@ -47,43 +48,43 @@ function displayGroup(tip, total) {
   ]);
 }
 
+
+// Calculation Functions
+function calculateTipAndTotal(billAmount, tipPercentage) {
+  const bill = parseFloat(billAmount);
+  const tip = bill * parseFloat(tipPercentage) / 100 || 0;
+  return [tip, bill + tip];
+}
+
+const round = places => R.pipe(
+    num => num * Math.pow(10, places),
+    Math.round,
+    num => num * Math.pow(10, -1 * places),
+);
+
+const formatMoney = R.curry(
+  (symbol, places, number) => {
+    return R.pipe(
+      R.defaultTo(0),
+      round(places),
+      num => num.toFixed(places),
+      R.concat(symbol),
+    )(number);
+  }
+);
+
 function view(dispatch, model) {
   const { bill, tipPercentage } = model;
-  const [billFloat, tipPercFloat] = getFloats([bill, tipPercentage]);
-  const tipFloat = calculateTip(tipPercFloat, billFloat);
-  const [tip, total] = toMoneyFormat([tipFloat, tipFloat + billFloat]);
+  const [tip, total] = calculateTipAndTotal(bill, tipPercentage);
+  const toMoney = formatMoney('$', 2);
 
   return div({ className: 'mw6 center' }, [
     h1({ className: 'f2 pv2 bb' }, 'Tip Calculator'),
     // pre(JSON.stringify(model, null, 2)),
     inputGroup(dispatch, model),
-    displayGroup(tip, total),
+    displayGroup(toMoney(tip), toMoney(total)),
   ]);
 }
 
-
-function toFloat(val) {
-  return R.pipe(
-    parseFloat,
-    R.defaultTo(0),
-  )(val);
-}
-
-function getFloats(vals) {
-  return R.map(toFloat, vals);
-}
-
-function calculateTip(perc, bill) {
-  return bill * (perc / 100.00);
-}
-
-function moneyFormat(val) {
-  const string = val.toFixed(2);
-  return `$${string}`;
-}
-
-function toMoneyFormat(vals) {
-  return R.map(moneyFormat, vals);
-}
 
 export default view;
