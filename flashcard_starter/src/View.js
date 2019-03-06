@@ -2,25 +2,30 @@ import * as R from 'ramda';
 import hh from 'hyperscript-helpers';
 import { h } from 'virtual-dom';
 
-import { newCardMessage, editCardMessage } from './Update';
+import { newCardMessage, editCardMessage, enterEditModeMessage, deleteCardMessage } from './Update';
 
 const { div, h1, form, label, input, h2, p, pre, a, button } = hh(h);
 
 // UBIQUITOUS COMPONENTS
-const deleteComponent = dispatch => button({ className: 'delete' }, 'X');
+const deleteComponent = (dispatch, id) => button({
+  className: 'delete',
+  onclick: _ => dispatch(deleteCardMessage(id))
+}, 'X');
 
 // EDIT MODE COMPONENTSe
-const formGroup = (title, data) => div({ className: ''}, [
+const formGroup = (title, value) => div({ className: ''}, [
   label({ className: '', for: title}, title),
-  input({ className: '', type: 'text', id: title }, data),
+  input({ className: '', type: 'text', id: title, value }),
 ]);
 
 const editForm  = (dispatch, card) => {
   return form({
     className: '',
     onsubmit: e => {
-      e.prventDefault();
-      console.dir(e.target);
+      e.preventDefault();
+      const question = e.target.childNodes[0].childNodes[1].value;
+      const answer = e.target.childNodes[1].childNodes[1].value;
+      dispatch(editCardMessage(card.id, question, answer));
     },
   },
   [
@@ -36,21 +41,25 @@ const editMode = (dispatch, card) => {
   ]);
 }
 
-// QUESTION MODE COMPONENTS
+// QUESTIO2N MODE COMPONENTS
 const answerLinkComponent = dispatch => a({ className: 'answerLink' }, 'Show me the answer');
 
-const showQuestionComponent = (dispatch, model) => {
-  return div({ className: 'questionBox' }, [
+const showQuestionComponent = (dispatch, card) => {
+  return div({
+    className: 'questionBox',
+    onclick: _ => dispatch(enterEditModeMessage(card.id)),
+  },
+  [
     h2({ className: 'questionLabel' }, 'Question'),
-    p({ className: 'question' }, model.question)
+    p({ className: 'question' }, card.question)
   ]);
 }
 
 const questionMode = (dispatch, card) => {
   return div({ className: 'cardBox' }, [
-    deleteComponent(dispatch),
+    deleteComponent(dispatch, card.id),
     showQuestionComponent(dispatch, card),
-    answerLinkComponent(dispatch)
+    answerLinkComponent(dispatch),
   ]);
 }
 
@@ -80,7 +89,7 @@ function view(dispatch, model) {
     h1({ className: 'f2 pv2 bb' }, 'Flashcard Study'),
     button({
       className: 'addButton',
-      onclick: e => dispatch(newCardMessage),
+      onclick: _ => dispatch(newCardMessage),
     },
     'Add a card'
     ),
