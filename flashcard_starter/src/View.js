@@ -40,13 +40,16 @@ const displayCards = (dispatch, cards) => {
     R.map(
       R.partial(determineDisplayMode, [dispatch]),
     ),
-    div
+    R.partial(div, [{ className: 'cardContainer' }]),
   )(cards);
 }
 
 function view(dispatch, model) {
   return div({ className: 'mw8 center' }, [
     h1({ className: 'f2 pv2 bb' }, 'Flashcard Study'),
+    button({
+      className: 'addButton',
+    }, 'Add a card'),
     displayCards(dispatch, model.cards),
     pre(JSON.stringify(model, null, 2)),
   ]);

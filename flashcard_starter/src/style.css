@@ -1,6 +1,18 @@
+/* CARD STYLES */
+.cardContainer {
+  width: auto;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
 .cardBox {
   width: 19%;
   padding: 1rem;
+  margin-top: 1rem;
+  margin-right: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -9,9 +21,9 @@
 
 .delete {
   display: block;
+  padding: .2rem .4rem 1.1rem;
   font-size: .8rem;
   font-weight: 600;
-  padding: .2rem .4rem;
   border: 1px solid transparent;
   border-radius: 1.5px;
   background-color: rgba(216, 49, 49, 0.8);
@@ -43,4 +55,13 @@
   font-weight: 500;
   font-size: .7rem;
   text-decoration: underline;
+}
+
+/* ADD BUTTON STYLES */
+.addButton {
+  padding: .5rem .7rem;
+  font-weight: 400;
+  background-color: rgba(228, 231, 44, 0.9);
+  border: 1px solid transparent;
+  border-radius: 3px;
 }
