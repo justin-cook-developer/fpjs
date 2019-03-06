@@ -4,25 +4,28 @@ import { h } from 'virtual-dom';
 
 const { div, h1, label, input, h2, p, pre, a, button } = hh(h);
 
+// UBIQUITOUS COMPONENTS
+const deleteComponent = dispatch => button({ className: 'delete' }, 'X');
+
+// QUESTION MODE COMPONENTS
+const answerLinkComponent = dispatch => a({ className: 'answerLink' }, 'Show me the answer');
+
 const showQuestionComponent = (dispatch, model) => {
-  return div([
-    h2('Question'),
-    p(model.question)
+  return div({ className: 'questionBox' }, [
+    h2({ className: 'questionLabel' }, 'Question'),
+    p({ className: 'question' }, model.question)
   ]);
 }
 
-const deleteComponent = dispatch => button('X');
-
-const answerLinkComponent = dispatch => a('Show me the answer');
-
 const questionMode = (dispatch, card) => {
-  return div([
+  return div({ className: 'cardBox' }, [
     deleteComponent(dispatch),
     showQuestionComponent(dispatch, card),
     answerLinkComponent(dispatch)
   ]);
 }
 
+// GENERAL DISPLAY COMPONENTS
 const determineDisplayMode = (dispatch, card) => {
   switch(card.displayMode) {
     case 'question':

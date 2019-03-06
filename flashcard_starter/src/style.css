@@ -1,0 +1,32 @@
+.cardBox {
+  width: 19%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: rgba(228, 231, 44, 0.7);
+}
+
+.delete {
+  display: block;
+  font-size: .8rem;
+  font-weight: 600;
+  padding: .2rem;
+  border: 1px solid transparent;
+  border-radius: 1.5px;
+  background-color: rgba(216, 49, 49, 0.8);
+  flex-basis: 10%;
+  align-self: flex-end;
+}
+
+.questionBox {
+  flex-basis: 40%;
+  align-self: flex-start;
+}
+
+.questionLabel {
+  font-size: .7rem;
+  font-weight: 400;
+  text-decoration: underline;
+  text-transform: uppercase;
+}
