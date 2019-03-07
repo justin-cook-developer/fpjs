@@ -3,18 +3,17 @@ import * as R from 'ramda';
 const MESSAGES = {
   new_card: 'new_card',
   edit_card: 'edit_card',
-  edit_card_mode: 'edit_card_mode',
+  enter_display_mode: 'enter_display_mode',
   delete_card: 'delete_card',
-  answer_card_mode: 'answer_card_mode',
-  reset_rank: 'reset_rank',
   update_rank: 'update_rank',
 };
 
+// ACTION CREATORS
 export const newCardMessage = { type: MESSAGES.new_card };
 
-export const enterEditModeMessage = id => ({
+export const enterDisplayMode = (id, mode) => ({
   type: MESSAGES.edit_card_mode,
-  id
+  id, mode,
 });
 
 export const editCardMessage = (id, question, answer) => ({
@@ -22,16 +21,6 @@ export const editCardMessage = (id, question, answer) => ({
   id,
   question,
   answer,
-});
-
-export const enterAnswerModeMessage = id => ({
-  type: MESSAGES.answer_card_mode,
-  id
-});
-
-export const resetRank = id => ({
-  type: MESSAGES.reset_rank,
-  id
 });
 
 export const updateRank = (amount, id) => ({
@@ -42,8 +31,9 @@ export const updateRank = (amount, id) => ({
 
 export const deleteCardMessage = id => ({
   type: MESSAGES.delete_card,
-  id
+  id,
 });
+
 
 function update(message, model) {
   switch(message.type) {
@@ -59,21 +49,10 @@ function update(message, model) {
       const updatedCards = cards.map(card => card.id === message.id ? updateCard(card, message) : card);
       return { cards: updatedCards, nextId, };
     }
-    case MESSAGES.edit_card_mode: {
+    case MESSAGES.enter_display_mode: {
       const { cards, nextId } = model;
-      const updatedDisplayMode = cards.map(card => card.id === message.id ? changeDisplayMode(card, 'edit') : card);
+      const updatedDisplayMode = cards.map(card => card.id === message.id ? changeDisplayMode(card, message.mode) : card);
       return { cards: updatedDisplayMode, nextId };
-    }
-    case MESSAGES.answer_card_mode: {
-      const { cards, nextId } = model;
-      const updatedDisplayMode = cards.map(card => card.id === message.id ? changeDisplayMode(card, 'answer') : card);
-      return { cards: updatedDisplayMode, nextId };
-    }
-    case MESSAGES.reset_rank: {
-      const { cards, nextId } = model;
-      const updatedRank = cards.map(card => card.id === message.id ? updateRankState(card, 0) : card);
-      const sortedByRank = updatedRank.sort((a, b) => a.rank - b.rank);
-      return { cards: sortedByRank, nextId };
     }
     case MESSAGES.update_rank: {
       const { cards, nextId } = model;
@@ -101,7 +80,7 @@ function changeDisplayMode(card, mode) {
 }
 
 function updateRankState(card, value) {
-  return { ...card, rank: value, displayMode: 'question' };
+  return { ...card, rank: value || 0, displayMode: 'question' };
 }
 
 export default update;

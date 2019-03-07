@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import hh from 'hyperscript-helpers';
 import { h } from 'virtual-dom';
 
-import { newCardMessage, editCardMessage, enterEditModeMessage, deleteCardMessage, enterAnswerModeMessage, resetRank, updateRank } from './Update';
+import { newCardMessage, editCardMessage, enterDisplayMode, deleteCardMessage, updateRank } from './Update';
 
 const { div, h1, form, label, input, h2, p, pre, a, button } = hh(h);
 
@@ -18,7 +18,7 @@ const showDataComponent = (dispatch, card, title, dispatchMessage = null) => {
     className: 'questionBox',
     onclick: _ => {
       if (dispatchMessage) {
-        dispatch(dispatchMessage(card.id));
+        dispatch(dispatchMessage);
       }
     },
   },
@@ -70,7 +70,7 @@ const rankButton = (dispatch, id, handleRank, classes, text) => {
 
 const selfFeedbackButtons = (dispatch, id) => {
   return div({ className: '' }, [
-    rankButton(dispatch, id, resetRank, '', 'Bad'),
+    rankButton(dispatch, id, R.partial(updateRank, [undefined]), '', 'Bad'),
     rankButton(dispatch, id, R.partial(updateRank, [1]), '', 'Good'),
     rankButton(dispatch, id, R.partial(updateRank, [2]), '', 'Great'),
   ]);
@@ -78,7 +78,7 @@ const selfFeedbackButtons = (dispatch, id) => {
 
 const answerMode = (dispatch, card) => {
   return div({ className: '' }, [
-    showDataComponent(dispatch, card, 'Question', enterEditModeMessage),
+    showDataComponent(dispatch, card, 'Question', enterDisplayMode(card.id, 'edit')),
     showDataComponent(dispatch, card, 'Answer'),
     selfFeedbackButtons(dispatch, card.id),
   ]);
@@ -88,12 +88,12 @@ const answerMode = (dispatch, card) => {
 // ---------- QUESTION MODE COMPONENTS ----------
 const answerLinkComponent = (dispatch, id) => a({
   className: 'answerLink',
-  onclick: _ => dispatch(enterAnswerModeMessage(id)),
+  onclick: _ => dispatch(enterDisplayMode(id, 'answer')),
 }, 'Show me the answer');
 
 const questionMode = (dispatch, card) => {
   return div({ className: '' }, [
-    showDataComponent(dispatch, card, 'Question', enterEditModeMessage),
+    showDataComponent(dispatch, card, 'Question', enterDisplayMode(card.id, 'edit')),
     answerLinkComponent(dispatch, card.id),
   ]);
 }
