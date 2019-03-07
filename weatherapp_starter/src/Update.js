@@ -3,6 +3,7 @@ import * as R from 'ramda';
 const MESSAGES = {
   location_input: 'location_input',
   new_location: 'new_location',
+  delete_location: 'delete_location',
 };
 
 export const newLocationMessage = { type: MESSAGES.new_location };
@@ -10,6 +11,11 @@ export const newLocationMessage = { type: MESSAGES.new_location };
 export const getLocationInput = nextLocation => ({
   type: MESSAGES.location_input,
   nextLocation,
+});
+
+export const deleteLocationMessage = id => ({
+  type: MESSAGES.delete_location,
+  id
 });
 
 function update(message, model) {
@@ -22,6 +28,10 @@ function update(message, model) {
     case MESSAGES.location_input: {
       const { nextLocation } = message;
       return { ...model, nextLocation };
+    }
+    case MESSAGES.delete_location: {
+      const filteredCities = model.cities.filter(city => city.id !== message.id);
+      return { ...model, cities: filteredCities };
     }
     default:
       return model;
