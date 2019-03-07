@@ -5,9 +5,17 @@ const MESSAGES = {
   edit_card: 'edit_card',
   edit_card_mode: 'edit_card_mode',
   delete_card: 'delete_card',
+  answer_card_mode: 'answer_card_mode',
+  reset_rank: 'reset_rank',
+  update_rank: 'update_rank',
 };
 
 export const newCardMessage = { type: MESSAGES.new_card };
+
+export const enterEditModeMessage = id => ({
+  type: MESSAGES.edit_card_mode,
+  id
+});
 
 export const editCardMessage = (id, question, answer) => ({
   type: MESSAGES.edit_card,
@@ -16,9 +24,20 @@ export const editCardMessage = (id, question, answer) => ({
   answer,
 });
 
-export const enterEditModeMessage = id => ({
-  type: MESSAGES.edit_card_mode,
+export const enterAnswerModeMessage = id => ({
+  type: MESSAGES.answer_card_mode,
   id
+});
+
+export const resetRank = id => ({
+  type: MESSAGES.reset_rank,
+  id
+});
+
+export const updateRank = (amount, id) => ({
+  type: MESSAGES.update_rank,
+  id,
+  amount,
 });
 
 export const deleteCardMessage = id => ({
@@ -42,14 +61,29 @@ function update(message, model) {
     }
     case MESSAGES.edit_card_mode: {
       const { cards, nextId } = model;
-      const updatedDisplayMode = cards.map(card => card.id === message.id ? changeToEditMode(card) : card);
+      const updatedDisplayMode = cards.map(card => card.id === message.id ? changeDisplayMode(card, 'edit') : card);
       return { cards: updatedDisplayMode, nextId };
+    }
+    case MESSAGES.answer_card_mode: {
+      const { cards, nextId } = model;
+      const updatedDisplayMode = cards.map(card => card.id === message.id ? changeDisplayMode(card, 'answer') : card);
+      return { cards: updatedDisplayMode, nextId };
+    }
+    case MESSAGES.reset_rank: {
+      const { cards, nextId } = model;
+      const updatedRank = cards.map(card => card.id === message.id ? updateRankState(card, 0) : card);
+      const sortedByRank = updatedRank.sort((a, b) => a.rank - b.rank);
+      return { cards: sortedByRank, nextId };
+    }
+    case MESSAGES.update_rank: {
+      const { cards, nextId } = model;
+      const updatedRank = cards.map(card => card.id === message.id ? updateRankState(card, card.rank + message.amount) : card);
+      const sortedByRank = updatedRank.sort((a, b) => a.rank - b.rank);
+      return { cards: sortedByRank, nextId };
     }
     case MESSAGES.delete_card: {
       const { cards, nextId } = model;
-      console.log('----', message.id)
       const filteredCards = cards.filter(card => card.id !== message.id);
-      console.log(filteredCards)
       return { cards: filteredCards, nextId };
     }
     default:
@@ -62,8 +96,12 @@ function updateCard(card, message) {
   return { ...card, question, answer, displayMode: 'question' };
 }
 
-function changeToEditMode(card) {
-  return { ...card, displayMode: 'edit' };
+function changeDisplayMode(card, mode) {
+  return { ...card, displayMode: mode };
+}
+
+function updateRankState(card, value) {
+  return { ...card, rank: value, displayMode: 'question' };
 }
 
 export default update;

@@ -2,17 +2,35 @@ import * as R from 'ramda';
 import hh from 'hyperscript-helpers';
 import { h } from 'virtual-dom';
 
-import { newCardMessage, editCardMessage, enterEditModeMessage, deleteCardMessage } from './Update';
+import { newCardMessage, editCardMessage, enterEditModeMessage, deleteCardMessage, enterAnswerModeMessage, resetRank, updateRank } from './Update';
 
 const { div, h1, form, label, input, h2, p, pre, a, button } = hh(h);
 
-// UBIQUITOUS COMPONENTS
+
+// ---------- REUSABLE COMPONENTS ----------
 const deleteComponent = (dispatch, id) => button({
   className: 'delete',
   onclick: _ => dispatch(deleteCardMessage(id))
 }, 'X');
 
-// EDIT MODE COMPONENTSe
+const showDataComponent = (dispatch, card, title, dispatchMessage = null) => {
+  return div({
+    className: 'questionBox',
+    onclick: _ => {
+      if (dispatchMessage) {
+        dispatch(dispatchMessage(card.id));
+      }
+    },
+  },
+  [
+    h2({ className: 'questionLabel' }, title),
+    p({ className: 'question' }, card[title.toLowerCase()
+    ])
+  ]);
+}
+
+
+// ---------- EDIT MODE COMPONENTS ----------
 const formGroup = (title, value) => div({ className: ''}, [
   label({ className: '', for: title}, title),
   input({ className: '', type: 'text', id: title, value }),
@@ -41,37 +59,64 @@ const editMode = (dispatch, card) => {
   ]);
 }
 
-// QUESTIO2N MODE COMPONENTS
-const answerLinkComponent = dispatch => a({ className: 'answerLink' }, 'Show me the answer');
 
-const showQuestionComponent = (dispatch, card) => {
-  return div({
-    className: 'questionBox',
-    onclick: _ => dispatch(enterEditModeMessage(card.id)),
-  },
-  [
-    h2({ className: 'questionLabel' }, 'Question'),
-    p({ className: 'question' }, card.question)
+// ---------- ANSWER MODE COMPONENTS ----------
+const rankButton = (dispatch, id, handleRank, classes, text) => {
+  return button({
+    className: `${classes}`,
+    onclick: _ => dispatch(handleRank(id))
+  }, text);
+}
+
+const selfFeedbackButtons = (dispatch, id) => {
+  return div({ className: '' }, [
+    rankButton(dispatch, id, resetRank, '', 'Bad'),
+    rankButton(dispatch, id, R.partial(updateRank, [1]), '', 'Good'),
+    rankButton(dispatch, id, R.partial(updateRank, [2]), '', 'Great'),
   ]);
 }
+
+const answerMode = (dispatch, card) => {
+  return div({ className: '' }, [
+    showDataComponent(dispatch, card, 'Question', enterEditModeMessage),
+    showDataComponent(dispatch, card, 'Answer'),
+    selfFeedbackButtons(dispatch, card.id),
+  ]);
+}
+
+
+// ---------- QUESTION MODE COMPONENTS ----------
+const answerLinkComponent = (dispatch, id) => a({
+  className: 'answerLink',
+  onclick: _ => dispatch(enterAnswerModeMessage(id)),
+}, 'Show me the answer');
 
 const questionMode = (dispatch, card) => {
-  return div({ className: 'cardBox' }, [
-    deleteComponent(dispatch, card.id),
-    showQuestionComponent(dispatch, card),
-    answerLinkComponent(dispatch),
+  return div({ className: '' }, [
+    showDataComponent(dispatch, card, 'Question', enterEditModeMessage),
+    answerLinkComponent(dispatch, card.id),
   ]);
 }
 
-// GENERAL DISPLAY COMPONENTS
+
+// ---------- GENERAL DISPLAY COMPONENTS ----------
+const cardDisplay = (dispatch, card, displayMode) => {
+  return div({ className: 'cardBox' }, [
+    deleteComponent(dispatch, card.id),
+    displayMode(dispatch, card),
+  ]);
+}
+
 const determineDisplayMode = (dispatch, card) => {
   switch(card.displayMode) {
     case 'question':
-      return questionMode(dispatch, card);
+      return cardDisplay(dispatch, card, questionMode);
     case 'edit':
-      return editMode(dispatch, card);
+      return cardDisplay(dispatch, card, editMode);
+    case 'answer':
+      return cardDisplay(dispatch, card, answerMode);
     default:
-      return questionMode(dispatch, card);
+      return cardDisplay(dispatch, card, questionMode);
   }
 }
 
