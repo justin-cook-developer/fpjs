@@ -139,7 +139,7 @@ function view(dispatch, model) {
     'Add a card'
     ),
     displayCards(dispatch, model.cards),
-    pre(JSON.stringify(model, null, 2)),
+    // pre(JSON.stringify(model, null, 2)),
   ]);
 }
 
