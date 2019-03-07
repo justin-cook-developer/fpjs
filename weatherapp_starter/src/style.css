@@ -28,4 +28,27 @@
 }
 
 /* CITY STYLES */
+#cities {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
 
+.city {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.remove {
+  display: block;
+  align-self: flex-end;
+}
+
+.content {
+  align-self: center;
+}
