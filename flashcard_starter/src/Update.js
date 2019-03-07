@@ -12,7 +12,7 @@ const MESSAGES = {
 export const newCardMessage = { type: MESSAGES.new_card };
 
 export const enterDisplayMode = (id, mode) => ({
-  type: MESSAGES.edit_card_mode,
+  type: MESSAGES.enter_display_mode,
   id, mode,
 });
 
@@ -76,6 +76,7 @@ function updateCard(card, message) {
 }
 
 function changeDisplayMode(card, mode) {
+  console.log(mode)
   return { ...card, displayMode: mode };
 }
 
