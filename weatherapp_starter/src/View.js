@@ -43,10 +43,11 @@ const locationComponent = location => {
 }
 
 const dataBoxComponent = (title, data) => {
+  console.log(data)
   const displayData = data !== null ? data : '?';
   return div({ className: 'dataBox' }, [
     p(title),
-    p(displayData),
+    p(displayData.toString()),
   ]);
 }
 
