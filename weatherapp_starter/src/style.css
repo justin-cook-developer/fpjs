@@ -33,22 +33,45 @@
   margin: auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 }
 
 .city {
-  flex-basis: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
 
-.remove {
+.delete {
+  width: 10%;
   display: block;
   align-self: flex-end;
+  background-color: red;
 }
 
 .content {
+  width: 100%;
   align-self: center;
+  display: flex;
+  justify-content: space-around;
 }
+
+.locationBox {
+  flex-basis: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.locationBox p:nth-child(odd) {
+  margin-bottom: -.6rem;
+}
+
+.dataGroup {
+  flex-basis: 70%;
+  display: flex;
+  justify-content: space-around;
+}
+

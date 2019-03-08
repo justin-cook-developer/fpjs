@@ -8,6 +8,7 @@ const MESSAGES = {
 };
 
 // SERVER UTILITIES
+//  You will need to substitute your own API key
 const applicationID = '0efce3651e99c343f70604d40d63b809';
 
 function whetherAddress(city) {
